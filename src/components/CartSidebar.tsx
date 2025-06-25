@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,6 +9,7 @@ import { ShoppingCart, Plus, Minus, Trash2, X } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 
 const CartSidebar = () => {
+  const navigate = useNavigate();
   const { items, updateQuantity, removeItem, getTotalPrice, getTotalItems, clearCart } = useCart();
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
@@ -16,6 +18,10 @@ const CartSidebar = () => {
     } else {
       updateQuantity(id, newQuantity);
     }
+  };
+
+  const handleCheckout = () => {
+    navigate('/checkout');
   };
 
   return (
@@ -105,7 +111,11 @@ const CartSidebar = () => {
             <div className="flex justify-between items-center mb-4">
               <span className="text-lg font-bold">Total: ${getTotalPrice().toFixed(2)}</span>
             </div>
-            <Button className="w-full bg-primary hover:bg-primary/90" size="lg">
+            <Button 
+              onClick={handleCheckout}
+              className="w-full bg-primary hover:bg-primary/90" 
+              size="lg"
+            >
               Proceed to Checkout
             </Button>
           </div>
