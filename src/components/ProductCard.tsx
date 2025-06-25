@@ -4,6 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { ShoppingCart, Star, Heart } from 'lucide-react';
+import { useCart } from '@/hooks/useCart';
+import { useWishlist } from '@/hooks/useWishlist';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProductCardProps {
   id: string;
@@ -30,6 +33,45 @@ const ProductCard: React.FC<ProductCardProps> = ({
   isNew,
   isBestseller,
 }) => {
+  const { addItem } = useCart();
+  const { toggleItem, isInWishlist } = useWishlist();
+  const { toast } = useToast();
+
+  const handleAddToCart = () => {
+    addItem({
+      id,
+      name,
+      price,
+      image,
+      category,
+    });
+    toast({
+      title: "Added to cart",
+      description: `${name} has been added to your cart.`,
+    });
+  };
+
+  const handleToggleWishlist = () => {
+    const wishlistItem = {
+      id,
+      name,
+      price,
+      originalPrice,
+      image,
+      rating,
+      reviews,
+      category,
+      isNew,
+      isBestseller,
+    };
+    
+    toggleItem(wishlistItem);
+    toast({
+      title: isInWishlist(id) ? "Removed from wishlist" : "Added to wishlist",
+      description: `${name} has been ${isInWishlist(id) ? 'removed from' : 'added to'} your wishlist.`,
+    });
+  };
+
   return (
     <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-md">
       <div className="relative overflow-hidden rounded-t-lg">
@@ -49,9 +91,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <Button
           size="sm"
           variant="ghost"
-          className="absolute top-2 right-2 w-8 h-8 p-0 bg-white/80 hover:bg-white"
+          className={`absolute top-2 right-2 w-8 h-8 p-0 bg-white/80 hover:bg-white ${
+            isInWishlist(id) ? 'text-red-500' : 'text-gray-600'
+          }`}
+          onClick={handleToggleWishlist}
         >
-          <Heart className="w-4 h-4" />
+          <Heart className={`w-4 h-4 ${isInWishlist(id) ? 'fill-current' : ''}`} />
         </Button>
       </div>
       
@@ -98,7 +143,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </CardContent>
       
       <CardFooter className="p-4 pt-0">
-        <Button className="w-full bg-primary hover:bg-primary/90">
+        <Button 
+          className="w-full bg-primary hover:bg-primary/90"
+          onClick={handleAddToCart}
+        >
           <ShoppingCart className="w-4 h-4 mr-2" />
           Add to Cart
         </Button>

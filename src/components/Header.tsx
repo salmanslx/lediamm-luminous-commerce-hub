@@ -1,15 +1,14 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { 
-  ShoppingCart, 
   User, 
   Search, 
   Menu, 
-  X,
-  Lightbulb
+  X
 } from 'lucide-react';
+import CartSidebar from './CartSidebar';
+import WishlistSidebar from './WishlistSidebar';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,13 +19,11 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 gradient-primary rounded-lg flex items-center justify-center">
-              <Lightbulb className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-primary">Lediamm</h1>
-              <p className="text-xs text-gray-500 -mt-1">Premium LED Solutions</p>
-            </div>
+            <img 
+              src="/lovable-uploads/6243c6e8-1deb-4665-b84e-de767e92b14c.png" 
+              alt="Lediamm Logo" 
+              className="h-10"
+            />
           </div>
 
           {/* Desktop Navigation */}
@@ -53,12 +50,12 @@ const Header = () => {
               <User className="w-5 h-5 mr-2" />
               Account
             </Button>
-            <Button variant="ghost" size="sm" className="relative">
-              <ShoppingCart className="w-5 h-5" />
-              <Badge className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-accent text-xs">
-                3
-              </Badge>
-            </Button>
+            
+            {/* Wishlist Sidebar */}
+            <WishlistSidebar />
+
+            {/* Cart Sidebar */}
+            <CartSidebar />
             
             {/* Mobile Menu Button */}
             <Button
