@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { ShoppingCart, Star, Heart } from 'lucide-react';
+import { ShoppingCart, Star, Heart, Eye } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { useWishlist } from '@/hooks/useWishlist';
 import { useToast } from '@/hooks/use-toast';
@@ -72,82 +72,115 @@ const ProductCard: React.FC<ProductCardProps> = ({
     });
   };
 
+  const discountPercentage = originalPrice ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0;
+
   return (
-    <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-md">
-      <div className="relative overflow-hidden rounded-t-lg">
-        <img
-          src={image}
-          alt={name}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-        />
-        <div className="absolute top-2 left-2 flex flex-col gap-1">
+    <Card className="group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg hover:scale-[1.02] bg-white relative overflow-hidden">
+      {/* Discount Badge */}
+      {discountPercentage > 0 && (
+        <div className="absolute top-3 left-3 z-10 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+          -{discountPercentage}%
+        </div>
+      )}
+      
+      <div className="relative overflow-hidden">
+        {/* Image Container */}
+        <div className="relative h-56 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+          <img
+            src={image}
+            alt={name}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          />
+          
+          {/* Overlay on Hover */}
+          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+            <Button
+              size="sm"
+              variant="secondary"
+              className="bg-white/90 hover:bg-white text-primary backdrop-blur-sm"
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              Quick View
+            </Button>
+          </div>
+        </div>
+        
+        {/* Badges */}
+        <div className="absolute top-3 right-3 flex flex-col gap-2">
           {isNew && (
-            <Badge className="bg-accent text-primary">New</Badge>
+            <Badge className="bg-gradient-to-r from-accent to-yellow-400 text-primary text-xs font-semibold shadow-lg">
+              NEW
+            </Badge>
           )}
           {isBestseller && (
-            <Badge className="bg-secondary text-white">Bestseller</Badge>
+            <Badge className="bg-gradient-to-r from-secondary to-blue-500 text-white text-xs font-semibold shadow-lg">
+              BESTSELLER
+            </Badge>
           )}
         </div>
+        
+        {/* Wishlist Button */}
         <Button
           size="sm"
           variant="ghost"
-          className={`absolute top-2 right-2 w-8 h-8 p-0 bg-white/80 hover:bg-white ${
+          className={`absolute bottom-3 right-3 w-10 h-10 p-0 rounded-full bg-white/90 hover:bg-white shadow-lg transition-all duration-300 ${
             isInWishlist(id) ? 'text-red-500' : 'text-gray-600'
           }`}
           onClick={handleToggleWishlist}
         >
-          <Heart className={`w-4 h-4 ${isInWishlist(id) ? 'fill-current' : ''}`} />
+          <Heart className={`w-5 h-5 ${isInWishlist(id) ? 'fill-current' : ''}`} />
         </Button>
       </div>
       
-      <CardContent className="p-4">
-        <div className="mb-2">
-          <Badge variant="outline" className="text-xs mb-2">
-            {category}
-          </Badge>
-          <h3 className="font-semibold text-gray-800 group-hover:text-primary transition-colors">
-            {name}
-          </h3>
-        </div>
+      <CardContent className="p-6 space-y-4">
+        {/* Category */}
+        <Badge variant="outline" className="text-xs font-medium border-primary/20 text-primary">
+          {category}
+        </Badge>
         
-        <div className="flex items-center mb-3">
-          <div className="flex items-center">
+        {/* Title */}
+        <h3 className="font-semibold text-lg text-gray-800 group-hover:text-primary transition-colors line-clamp-2">
+          {name}
+        </h3>
+        
+        {/* Rating */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-1">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
                 className={`w-4 h-4 ${
                   i < Math.floor(rating)
-                    ? 'text-accent fill-current'
+                    ? 'text-amber-400 fill-current'
                     : 'text-gray-300'
                 }`}
               />
             ))}
+            <span className="text-sm text-gray-600 ml-2">
+              ({reviews})
+            </span>
           </div>
-          <span className="text-sm text-gray-500 ml-2">
-            ({reviews} reviews)
-          </span>
         </div>
         
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-bold text-primary">
-              ${price.toFixed(2)}
+        {/* Price */}
+        <div className="flex items-center gap-3">
+          <span className="text-2xl font-bold text-primary">
+            ${price.toFixed(2)}
+          </span>
+          {originalPrice && (
+            <span className="text-lg text-gray-500 line-through">
+              ${originalPrice.toFixed(2)}
             </span>
-            {originalPrice && (
-              <span className="text-sm text-gray-500 line-through">
-                ${originalPrice.toFixed(2)}
-              </span>
-            )}
-          </div>
+          )}
         </div>
       </CardContent>
       
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className="p-6 pt-0">
         <Button 
-          className="w-full bg-primary hover:bg-primary/90"
+          className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-semibold py-3 shadow-lg hover:shadow-xl transition-all duration-300 group"
           onClick={handleAddToCart}
         >
-          <ShoppingCart className="w-4 h-4 mr-2" />
+          <ShoppingCart className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
           Add to Cart
         </Button>
       </CardFooter>

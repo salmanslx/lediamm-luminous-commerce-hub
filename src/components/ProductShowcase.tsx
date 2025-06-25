@@ -2,7 +2,7 @@
 import React from 'react';
 import ProductCard from './ProductCard';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 const ProductShowcase = () => {
   const featuredProducts = [
@@ -50,27 +50,41 @@ const ProductShowcase = () => {
   ];
 
   return (
-    <section id="products" className="py-16 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Featured LED Products
+    <section id="products" className="py-24 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute top-20 left-10 w-32 h-32 bg-accent/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-20 right-10 w-40 h-40 bg-secondary/10 rounded-full blur-3xl"></div>
+      
+      <div className="container mx-auto px-4 relative">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-accent/20 to-accent/10 text-primary rounded-full px-4 py-2 text-sm font-medium mb-6">
+            <Sparkles className="w-4 h-4" />
+            Featured Products
+          </div>
+          
+          <h2 className="text-5xl font-bold text-gray-900 mb-6">
+            Premium LED Products
+            <span className="block text-transparent bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text">
+              Engineered for Excellence
+            </span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Discover our most popular LED lighting solutions, engineered for performance and designed for beauty.
+          
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Discover our most popular LED lighting solutions, featuring cutting-edge technology, 
+            exceptional quality, and stunning design for every application.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {featuredProducts.map((product) => (
             <ProductCard key={product.id} {...product} />
           ))}
         </div>
 
         <div className="text-center">
-          <Button size="lg" className="bg-primary hover:bg-primary/90">
+          <Button size="lg" className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-semibold px-8 py-4 shadow-xl hover:shadow-2xl transition-all duration-300 group">
             View All Products
-            <ArrowRight className="ml-2 w-5 h-5" />
+            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
         </div>
       </div>
